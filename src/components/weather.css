@@ -84,3 +84,8 @@
     width: 26px;
     margin-top: 10px;
 }
+.toast{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

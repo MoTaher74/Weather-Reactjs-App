@@ -8,7 +8,8 @@ import humidity_icon from '../assets/humidity.png';
 import rain_icon from '../assets/rain.png';
 import snow_icon from '../assets/snow.png';
 import wind_icon from '../assets/wind.png';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Weather = ()=> {
     const inputRef = useRef();
@@ -29,47 +30,70 @@ const Weather = ()=> {
         "10n":rain_icon,
         "13d":snow_icon,
         "13n":snow_icon,
-    }
+    };
+
 // api call
 const apiKey = import.meta.env.VITE_APP_ID
 // console.log(apiKey)
 const search = async (city)=>{
-    if(city === ''){
-        alert("enter city name");
+    if (!city) {
+        toast.error("Please enter a city name.");
         return;
     }
     try{
         const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`;
-
+        
         const response = await fetch(url);
         const data = await response.json();
-        if(!response.ok){
-            alert(data.message);
+        const icon = allIcons[data.weather[0].icon] || clear_icon;
+        const weatherInfo = {
+            humidity:data.main.humidity, 
+            windSpeed:data.wind.speed,
+            temperature:Math.floor(data.main.temp),
+            location:data.name,
+            icon:icon
+         };
+         localStorage.setItem('weatherData',JSON.stringify(weatherInfo));
+         if (!response.ok ) {
+            toast.error("City not found. Please enter a valid city.");
             return;
         }
         // console.log(data);
-        const icon = allIcons[data.weather[0].icon] || clear_icon;
-        setWeatherData({
-           humidity:data.main.humidity, 
-           windSpeed:data.wind.speed,
-           temperature:Math.floor(data.main.temp),
-           location:data.name,
-           icon:icon
-        });
-    }catch(error){
+
+        setWeatherData(weatherInfo);
+    }catch {
 setWeatherData(false);
-console.error(error);
+    toast.error("City not found. Please enter a valid city.");
     }
 }
 useEffect(()=>{
-    search('paris');
+    const storedDataWeather = JSON.parse(localStorage.getItem('weatherData'));
+    if(storedDataWeather){
+        setWeatherData(storedDataWeather);
+    }else{
+        search('london');
+    }
+
 },[])
 
   return (
     <div className='weather'>
+       
+       <ToastContainer position="top-center" // مكان التوست في النص من فوق
+  autoClose={3000}
+  hideProgressBar={false}
+  newestOnTop={false}
+  closeOnClick
+  rtl={false}
+  pauseOnFocusLoss
+  draggable
+  pauseOnHover
+  theme="colored" />
+
       <div className="search-bar">
         <input ref={inputRef} type='text' placeholder='Search'/>
         <img src={search_icon} alt=""  onClick={()=>search(inputRef.current.value)}/>
+       
       </div>
 
       {weatherData ? <>
