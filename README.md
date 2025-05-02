@@ -1,3 +1,28 @@
+![Weather App Screenshot](./src/weatherapp.png)
+
+# 🌦️ Weather App
+
+A simple and responsive weather application built with **React**, using the **OpenWeatherMap API** to fetch real-time weather data.
+
+---
+
+## 🚀 Features
+
+- 🔍 Search for weather by city name
+- 🌡️ Displays temperature, weather condition, humidity, and wind speed
+- 📷 Dynamic weather icons based on current condition
+- 📱 Fully responsive design
+
+---
+
+## 🛠️ Tech Stack
+
+- **React**
+- **OpenWeatherMap API**
+- **CSS** (custom styling)
+
+---
+
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
